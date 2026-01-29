@@ -1,14 +1,11 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function page() {
 
     const something = true;
 
-    return <div className={cn(
-      "text-red-500 font-bold",
-      something === true && "text-green-500"
-
-    )}>
-      Hello Wrold
+    return <div className="flex justify-center items-center min-h-screen min-w-screen">
+      <Button size={"lg"} className="cursor-pointer" variant={"default"} >Click Me</Button>
     </div>
 }
