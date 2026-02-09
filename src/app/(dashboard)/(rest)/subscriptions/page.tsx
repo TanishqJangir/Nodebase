@@ -13,8 +13,8 @@ const Page = () => {
         onSuccess : () => {
             toast.success("Success")
         },
-        onError : () => {
-            toast.error("Failed");
+        onError : ({message}) => {
+            toast.error(message);
         }
     }));
 

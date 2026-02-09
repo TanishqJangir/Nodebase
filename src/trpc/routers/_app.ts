@@ -8,10 +8,10 @@ import { TRPCError } from "@trpc/server";
 
 export const appRouter = createTRPCRouter({
     testAi: premiumProcedure.mutation(async () => {
-        throw new TRPCError({code : "BAD_REQUEST", message : "Something went wrong"});
         await inngest.send({
             name : "execute/ai"
-        })
+        });
+        return {success : true, message : "Job queued"}
 
     }),
 
