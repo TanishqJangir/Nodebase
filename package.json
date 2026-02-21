@@ -7,6 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
+    "ngrock:dev": "ngrok http --url=deliverable-thora-necessitously.ngrok-free.dev 3000",
     "format": "biome format --write",
     "inngest:dev": "inngest-cli dev",
     "dev:all": "mprocs"
@@ -60,6 +61,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "dotenv-cli": "^10.0.0",
     "embla-carousel-react": "^8.6.0",
     "handlebars": "^4.7.8",
     "inngest": "^3.44.1",
