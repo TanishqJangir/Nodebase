@@ -101,7 +101,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
     );
 
 
-    const text = steps[0].content[0].type === "text"
+    const text = steps?.[0]?.content?.[0]?.type === "text"
       ? steps[0].content[0].text
       : "";
 
