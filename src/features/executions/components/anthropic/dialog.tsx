@@ -117,7 +117,7 @@ export const AnthropicDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent>
+            <DialogContent className="overflow-y-auto max-h-[90vh]">
 
                 <DialogHeader>
                     <DialogTitle>Anthropic Configuration</DialogTitle>
@@ -198,6 +198,7 @@ export const AnthropicDialog = ({
                                             <Input
                                                 type={showApiKey ? "text" : "password"}
                                                 placeholder="sk-ant-..."
+                                                className="pr-10"
                                                 {...field}
                                             />
                                             <button

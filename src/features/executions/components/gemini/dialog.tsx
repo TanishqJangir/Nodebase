@@ -115,7 +115,7 @@ export const GeminiDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent>
+            <DialogContent className="overflow-y-auto max-h-[90vh]">
 
                 <DialogHeader>
                     <DialogTitle>Gemini Configuration</DialogTitle>
@@ -195,6 +195,7 @@ export const GeminiDialog = ({
                                             <Input
                                                 type={showApiKey ? "text" : "password"}
                                                 placeholder="AIza..."
+                                                className="pr-10"
                                                 {...field}
                                             />
                                             <button

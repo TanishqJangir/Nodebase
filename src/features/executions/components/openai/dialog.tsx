@@ -29,8 +29,9 @@ import { Textarea } from "@/components/ui/textarea";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 export const AVAILABLE_MODELS = [
     "gpt-4o",
@@ -75,6 +76,10 @@ export const OpenAiDialog = ({
     defaultValues = {}
 }: Props) => {
 
+
+    const [showApiKey, setShowApiKey] = useState(false);
+
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -112,7 +117,7 @@ export const OpenAiDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent>
+            <DialogContent className="overflow-y-auto max-h-[90vh]">
 
                 <DialogHeader>
                     <DialogTitle>OpenAI Configuration</DialogTitle>
@@ -189,11 +194,25 @@ export const OpenAiDialog = ({
                                 <FormItem>
                                     <FormLabel>API Key</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="sk-..."
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                type={showApiKey ? "text" : "password"}
+                                                placeholder="sk-..."
+                                                className="pr-10"
+                                                {...field}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                                onClick={() => setShowApiKey(!showApiKey)}
+                                            >
+                                                {showApiKey ? (
+                                                    <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
+                                                ) : (
+                                                    <EyeIcon className="h-4 w-4 text-muted-foreground" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </FormControl>
                                     <FormDescription>
                                         Your OpenAI API key. You can find it at{" "}
