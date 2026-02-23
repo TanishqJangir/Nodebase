@@ -4,6 +4,7 @@ import { generateText } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic"
 import type { NodeExecutor} from "@/features/executions/types";
 import { anthropicChannel } from "@/inngest/channels/anthropic";
+import { AVAILABLE_MODELS } from "./dialog";
 
 Handlebars.registerHelper("json", (context) => {
   const jsonString = JSON.stringify(context);
@@ -89,11 +90,11 @@ export const anthropicExecutor: NodeExecutor<AnthropicData> = async ({
       "anthropic-generate-text",
       generateText,
       {
-        model: anthropic(data.model || ""), 
+        model: anthropic(data.model || AVAILABLE_MODELS[0]), 
         system: systemPrompt,
         prompt: userPrompt,
         experimental_telemetry: {
-          isEnabled: true,
+          isEnabled: true,       //these 3 should be false according to coderabbit. See in the future
           recordInputs: true,
           recordOutputs: true,
         },

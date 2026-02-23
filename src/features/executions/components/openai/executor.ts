@@ -4,6 +4,7 @@ import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai"
 import type { NodeExecutor } from "@/features/executions/types";
 import { openAiChannel } from "@/inngest/channels/openai";
+import { AVAILABLE_MODELS } from "./dialog";
 
 Handlebars.registerHelper("json", (context) => {
   const jsonString = JSON.stringify(context);
@@ -37,7 +38,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
     })
   );
 
-  if(!data.variableName){
+  if (!data.variableName) {
     await publish(
       openAiChannel().status({
         nodeId,
@@ -47,7 +48,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
     throw new NonRetriableError("OpenAi Node: Variable name is missing");
   };
 
-  if(!data.userPrompt){
+  if (!data.userPrompt) {
     await publish(
       openAiChannel().status({
         nodeId,
@@ -57,11 +58,11 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
     throw new NonRetriableError("OpenAi Node: User prompt is missing");
   };
 
-  if(!data.apiKey){
+  if (!data.apiKey) {
     await publish(
-      openAiChannel().status({ 
-        nodeId, 
-        status: "error" 
+      openAiChannel().status({
+        nodeId,
+        status: "error"
       })
     );
     throw new NonRetriableError("OpenAi Node: API key is missing");
@@ -89,7 +90,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
       "openai-generate-text",
       generateText,
       {
-        model: openai(data.model || "gpt-3.5-turbo"), 
+        model: openai(data.model || AVAILABLE_MODELS[0]),
         system: systemPrompt,
         prompt: userPrompt,
         experimental_telemetry: {

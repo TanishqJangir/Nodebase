@@ -90,7 +90,7 @@ export const geminiExecutor: NodeExecutor<GeminiData> = async ({
       "gemini-generate-text",
       generateText,
       {
-        model: google(data.model || "gemma-3-12b-it"),
+        model: google(data.model || AVAILABLE_MODELS[0]),
         system: systemPrompt,
         prompt: userPrompt,
         experimental_telemetry: {
