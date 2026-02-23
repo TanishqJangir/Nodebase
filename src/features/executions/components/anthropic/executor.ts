@@ -1,9 +1,9 @@
 import Handlebars from "handlebars"
 import { NonRetriableError } from "inngest";
 import { generateText } from "ai";
-import { createOpenAI } from "@ai-sdk/openai"
-import type { NodeExecutor } from "@/features/executions/types";
-import { openAiChannel } from "@/inngest/channels/openai";
+import { createAnthropic } from "@ai-sdk/anthropic"
+import type { NodeExecutor} from "@/features/executions/types";
+import { anthropicChannel } from "@/inngest/channels/anthropic";
 
 Handlebars.registerHelper("json", (context) => {
   const jsonString = JSON.stringify(context);
@@ -14,7 +14,7 @@ Handlebars.registerHelper("json", (context) => {
 
 
 
-type OpenAiData = {
+type AnthropicData = {
   variableName?: string;
   model?: string;
   apiKey?: string;
@@ -22,7 +22,7 @@ type OpenAiData = {
   userPrompt?: string;
 }
 
-export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
+export const anthropicExecutor: NodeExecutor<AnthropicData> = async ({
   data,
   nodeId,
   context,
@@ -31,7 +31,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
 }) => {
 
   await publish(
-    openAiChannel().status({
+    anthropicChannel().status({
       nodeId,
       status: "loading",
     })
@@ -39,32 +39,32 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
 
   if(!data.variableName){
     await publish(
-      openAiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "error",
       })
     );
-    throw new NonRetriableError("OpenAi Node: Variable name is missing");
+    throw new NonRetriableError("Anthropic Node: Variable name is missing");
   };
 
   if(!data.userPrompt){
     await publish(
-      openAiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "error",
       })
     );
-    throw new NonRetriableError("OpenAi Node: User prompt is missing");
+    throw new NonRetriableError("Anthropic Node: User prompt is missing");
   };
 
   if(!data.apiKey){
     await publish(
-      openAiChannel().status({ 
+      anthropicChannel().status({ 
         nodeId, 
         status: "error" 
       })
     );
-    throw new NonRetriableError("OpenAi Node: API key is missing");
+    throw new NonRetriableError("Anthropic Node: API key is missing");
   };
 
   //TODO: Throw if credentials is missing
@@ -79,17 +79,17 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
 
   const credentialValue = data.apiKey;
 
-  const openai = createOpenAI({
+  const anthropic = createAnthropic({
     apiKey: credentialValue,
   })
 
   try {
 
     const { steps } = await step.ai.wrap(
-      "openai-generate-text",
+      "anthropic-generate-text",
       generateText,
       {
-        model: openai(data.model || "gpt-3.5-turbo"), 
+        model: anthropic(data.model || ""), 
         system: systemPrompt,
         prompt: userPrompt,
         experimental_telemetry: {
@@ -106,7 +106,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
       : "";
 
     await publish(
-      openAiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "success",
       })
@@ -121,12 +121,12 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
 
   } catch (error) {
     await publish(
-      openAiChannel().status({
+      anthropicChannel().status({
         nodeId,
         status: "error",
       })
     );
-    throw new NonRetriableError("Failed to generate text with OpenAI", {
+    throw new NonRetriableError("Failed to generate text with Anthropic", {
       cause: error instanceof Error ? error : undefined,
     });
   }

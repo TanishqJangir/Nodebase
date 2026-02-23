@@ -29,15 +29,18 @@ import { Textarea } from "@/components/ui/textarea";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {Eye, EyeOff} from "lucide-react";
 
 export const AVAILABLE_MODELS = [
-    "gpt-4o",
-    "gpt-4o-mini",
-    "gpt-4-turbo",
-    "gpt-3.5-turbo",
+    "claude-opus-4-5",
+    "claude-sonnet-4-5",
+    "claude-haiku-4-5",
+    "claude-3-5-sonnet-latest",
+    "claude-3-5-haiku-latest",
 ] as const;
+
 
 const formSchema = z.object({
     variableName: z
@@ -50,7 +53,7 @@ const formSchema = z.object({
     apiKey: z
         .string()
         .min(1, { message: "API key is required" })
-        .startsWith("sk-", { message: "OpenAI API key must start with 'sk-'" }),
+        .startsWith("sk-", { message: "Anthropic API key must start with 'sk-'" }),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, { message: "User prompt is required" }),
     //.refine() TODO JSON5
@@ -59,21 +62,23 @@ const formSchema = z.object({
 
 
 
-export type OpenAiFormValues = z.infer<typeof formSchema>;
+export type AnthropicFormValues = z.infer<typeof formSchema>;
 
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSubmit: (values: z.infer<typeof formSchema>) => void;
-    defaultValues?: Partial<OpenAiFormValues>
+    defaultValues?: Partial<AnthropicFormValues>
 };
 
-export const OpenAiDialog = ({
+export const AnthropicDialog = ({
     open,
     onOpenChange,
     onSubmit,
     defaultValues = {}
 }: Props) => {
+
+    const [showApiKey, setShowApiKey] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -99,7 +104,7 @@ export const OpenAiDialog = ({
         }
     }, [open, defaultValues, form])
 
-    const watchVariableName = form.watch("variableName") || "myOpenAI";
+    const watchVariableName = form.watch("variableName") || "myAnthropic";
 
 
     const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -115,7 +120,7 @@ export const OpenAiDialog = ({
             <DialogContent>
 
                 <DialogHeader>
-                    <DialogTitle>OpenAI Configuration</DialogTitle>
+                    <DialogTitle>Anthropic Configuration</DialogTitle>
                     <DialogDescription>
                         Configure the AI model and prompts for this node.
                     </DialogDescription>
@@ -135,7 +140,7 @@ export const OpenAiDialog = ({
                                     <FormLabel>Variable Name</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="myOpenAI"
+                                            placeholder="myAnthropic"
                                             {...field}
                                         />
                                     </FormControl>
@@ -172,7 +177,7 @@ export const OpenAiDialog = ({
                                         </SelectContent>
                                     </Select>
                                     <FormDescription>
-                                        The OpenAi model to use for completion.
+                                        The Anthropic model to use for completion.
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -189,21 +194,34 @@ export const OpenAiDialog = ({
                                 <FormItem>
                                     <FormLabel>API Key</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="sk-..."
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                type={showApiKey ? "text" : "password"}
+                                                placeholder="sk-ant-..."
+                                                {...field}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                                onClick={() => setShowApiKey(!showApiKey)}
+                                            >
+                                                {showApiKey ? (
+                                                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4 text-muted-foreground" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </FormControl>
                                     <FormDescription>
-                                        Your OpenAI API key. You can find it at{" "}
+                                        Your Anthropic API key. You can find it at{" "}
                                         <a
-                                            href="https://platform.openai.com/api-keys"
+                                            href="https://console.anthropic.com/settings/keys"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="underline text-primary"
                                         >
-                                            platform.openai.com/api-keys
+                                            console.anthropic.com/settings/keys
                                         </a>
                                     </FormDescription>
                                     <FormMessage />
