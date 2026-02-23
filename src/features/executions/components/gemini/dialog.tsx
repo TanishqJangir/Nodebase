@@ -29,8 +29,9 @@ import { Textarea } from "@/components/ui/textarea";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {Eye, EyeOff} from "lucide-react";
 
 export const AVAILABLE_MODELS = [
     "gemini-2.5-flash",
@@ -74,6 +75,8 @@ export const GeminiDialog = ({
     onSubmit,
     defaultValues = {}
 }: Props) => {
+
+    const [showApiKey, setShowApiKey] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -188,11 +191,24 @@ export const GeminiDialog = ({
                                 <FormItem>
                                     <FormLabel>API Key</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="AIza..."
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                type={showApiKey ? "text" : "password"}
+                                                placeholder="AIza..."
+                                                {...field}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                                onClick={() => setShowApiKey(!showApiKey)}
+                                            >
+                                                {showApiKey ? (
+                                                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4 text-muted-foreground" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </FormControl>
                                     <FormDescription>
                                         Your Google Gemini API key. You can find it at{" "}
