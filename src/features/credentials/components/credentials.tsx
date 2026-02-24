@@ -2,9 +2,7 @@
 
 import { formatDistanceToNow } from "date-fns";
 import { EmptyView, EntityContainer, EntityHeader, EntityItem, EntityList, EntityPagination, EntitySearch, ErrorView, LoadingView } from "@/components/entity-components";
-import { useRemoveCredential, useSuspenseCredentials } from "../hooks/use-credentials"
-import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
-import { router } from "better-auth/api";
+import { useRemoveCredential, useSuspenseCredentials } from "../hooks/use-credentials";
 import { useRouter } from "next/navigation";
 import { useCredentialsParams } from "../hooks/use-credentials-params";
 import { useEntitySearch } from "@/hooks/use-entity-search";
@@ -77,9 +75,9 @@ export const CredentialsContainer = ({
 }) => {
     return (
         <EntityContainer
-            header={<WorkflowsHeader />}
-            search={<WorkflowsSearch />}
-            pagination={<WorkflowsPagination />}
+            header={<CredentialsHeader />}
+            search={<CredentialsSearch />}
+            pagination={<CredentialsPagination />}
         >
             {children}
 
