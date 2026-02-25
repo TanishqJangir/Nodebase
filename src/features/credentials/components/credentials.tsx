@@ -1,13 +1,24 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns";
-import { EmptyView, EntityContainer, EntityHeader, EntityItem, EntityList, EntityPagination, EntitySearch, ErrorView, LoadingView } from "@/components/entity-components";
+import {
+    EmptyView,
+    EntityContainer,
+    EntityHeader,
+    EntityItem,
+    EntityList,
+    EntityPagination,
+    EntitySearch,
+    ErrorView,
+    LoadingView
+} from "@/components/entity-components";
 import { useRemoveCredential, useSuspenseCredentials } from "../hooks/use-credentials";
 import { useRouter } from "next/navigation";
 import { useCredentialsParams } from "../hooks/use-credentials-params";
 import { useEntitySearch } from "@/hooks/use-entity-search";
-import type { Workflow } from "@/generated/prisma";
-import { WorkflowIcon } from "lucide-react";
+import type { Credential } from "@/generated/prisma";
+import { CredentialType } from "@/generated/prisma";
+import Image from "next/image";
 
 export const CredentialsSearch = () => {
     const [params, setParams] = useCredentialsParams();
@@ -108,17 +119,27 @@ export const CredentialsEmpty = () => {
     )
 }
 
+const credentialLogos: Record<CredentialType, string> = {
+    [CredentialType.OPENAI]: "/logos/openai.svg",
+    [CredentialType.ANTHROPIC]: "/logos/anthropic.svg",
+    [CredentialType.GEMINI]: "/logos/gemini.svg",
+}
+
 
 
 export const CredentialItem = ({
     data,
-}: { data: Workflow }) => {
+}: {
+    data: Credential
+}) => {
 
     const removeCredential = useRemoveCredential();
 
     const handleRemove = () => {
         removeCredential.mutate({ id: data.id });
     }
+
+    const logo = credentialLogos[data.type] || "/logos/openai.svg";
 
     return (
         <EntityItem
@@ -134,7 +155,7 @@ export const CredentialItem = ({
             image={
                 <>
                     <div className="size-8 flex items-center justify-center">
-                        <WorkflowIcon className="size-5 text-muted-foreground" />
+                        <Image src={logo} alt={data.type} width={20} height={20} />
                     </div>
                 </>
             }
