@@ -110,7 +110,7 @@ export const CredentialForm = ({
             } else {
                 await createCredential.mutateAsync(values, {
                     onSuccess: (data) => {
-                        router.push(`/credentials/${data.id}`);
+                        router.push(`/credentials/`); //Removed the ${data.id} from the URL to prevent showing the credential value after creation
                     },
                     onError: (error) => {
                         handleError(error);
