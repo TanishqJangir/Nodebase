@@ -121,7 +121,10 @@ export const workflowsRouter = createTRPCRouter({
                 });
 
                 return workflow;
-            });
+            },
+        {
+            timeout: 15000, //10 seconds, as saving large workflows with many nodes and connections can take time
+        });
         }),
 
     updateName: protectedProcedure
