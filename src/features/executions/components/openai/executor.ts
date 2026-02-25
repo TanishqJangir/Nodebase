@@ -66,7 +66,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
         status: "error"
       })
     );
-    throw new NonRetriableError("OpenAi Node: API key is missing");
+    throw new NonRetriableError("OpenAi Node: Credentials is missing");
   };
 
 
