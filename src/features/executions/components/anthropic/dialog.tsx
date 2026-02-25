@@ -31,7 +31,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { useCredentialsByType } from "@/features/credentials/hooks/use-credentials";
+import { CredentialType } from "@/generated/prisma";
+import Image from "next/image";
 
 export const AVAILABLE_MODELS = [
     "claude-opus-4-5",
@@ -50,10 +52,7 @@ const formSchema = z.object({
             message: "Variable name must start with a letter or underscore and can only contain letters, numbers, underscores",
         }),
     model: z.string().min(1, { message: "Model is required" }),
-    apiKey: z
-        .string()
-        .min(1, { message: "API key is required" })
-        .startsWith("sk-", { message: "Anthropic API key must start with 'sk-'" }),
+    credentialId: z.string().min(1, "Credential is required"),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, { message: "User prompt is required" }),
     //.refine() TODO JSON5
@@ -78,14 +77,17 @@ export const AnthropicDialog = ({
     defaultValues = {}
 }: Props) => {
 
-    const [showApiKey, setShowApiKey] = useState(false);
+    const {
+        data: credentials,
+        isLoading: isLoadingCredentials,
+    } = useCredentialsByType(CredentialType.ANTHROPIC);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             variableName: defaultValues.variableName || "",
             model: defaultValues.model || AVAILABLE_MODELS[0],
-            apiKey: defaultValues.apiKey || "",
+            credentialId: defaultValues.credentialId || "",
             systemPrompt: defaultValues.systemPrompt || "",
             userPrompt: defaultValues.userPrompt || "",
         },
@@ -97,7 +99,7 @@ export const AnthropicDialog = ({
             form.reset({
                 variableName: defaultValues.variableName || "",
                 model: defaultValues.model || AVAILABLE_MODELS[0],
-                apiKey: defaultValues.apiKey || "",
+                credentialId: defaultValues.credentialId || "",
                 systemPrompt: defaultValues.systemPrompt || "",
                 userPrompt: defaultValues.userPrompt || "",
             });
@@ -189,42 +191,39 @@ export const AnthropicDialog = ({
 
                         <FormField
                             control={form.control}
-                            name="apiKey"
+                            name="credentialId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>API Key</FormLabel>
-                                    <FormControl>
-                                        <div className="relative">
-                                            <Input
-                                                type={showApiKey ? "text" : "password"}
-                                                placeholder="sk-ant-..."
-                                                className="pr-10"
-                                                {...field}
-                                            />
-                                            <button
-                                                type="button"
-                                                className="absolute inset-y-0 right-0 flex items-center pr-3"
-                                                onClick={() => setShowApiKey(!showApiKey)}
-                                            >
-                                                {showApiKey ? (
-                                                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                                                ) : (
-                                                    <Eye className="h-4 w-4 text-muted-foreground" />
-                                                )}
-                                            </button>
-                                        </div>
-                                    </FormControl>
-                                    <FormDescription>
-                                        Your Anthropic API key. You can find it at{" "}
-                                        <a
-                                            href="https://console.anthropic.com/settings/keys"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="underline text-primary"
-                                        >
-                                            console.anthropic.com/settings/keys
-                                        </a>
-                                    </FormDescription>
+                                    <FormLabel>Anthropic Credential</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        disabled={isLoadingCredentials || !credentials?.length}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select a credential" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {credentials?.map((credential) => (
+                                                <SelectItem
+                                                    key={credential.id}
+                                                    value={credential.id}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <Image
+                                                            src="/logos/anthropic.svg"
+                                                            alt="Anthropic"
+                                                            width={16}
+                                                            height={16}
+                                                        />
+                                                        {credential.name}
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}
