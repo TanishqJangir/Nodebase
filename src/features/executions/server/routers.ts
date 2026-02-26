@@ -14,7 +14,15 @@ export const executionsRouter = createTRPCRouter({
                     id: input.id,
                     workflow: {
                         userId: ctx.auth.user.id
-                    }
+                    },
+                },
+                include:{
+                    workflow: {
+                        select:{
+                            id: true,
+                            name: true,
+                        },
+                    },
                 },
             });
         }),

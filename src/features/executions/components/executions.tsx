@@ -105,6 +105,11 @@ const getStatusIcon = (status: ExecutionStatus) => {
 }
 
 
+const formatStatus = (status: ExecutionStatus) => {
+  return status.charAt(0) + status.slice(1).toLowerCase();
+}
+
+
 
 export const ExecutionsItem = ({
     data,
@@ -134,7 +139,7 @@ export const ExecutionsItem = ({
     return (
         <EntityItem
             href={`/executions/${data.id}`}
-            title={data.status}
+            title={formatStatus(data.status)}
             subtitle={subTitle}
             image={
                 <>

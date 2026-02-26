@@ -65,5 +65,6 @@ export const sendWorkflowExecution = async (data: {
     return inngest.send({
         name: "workflows/execute.workflow",
         data,
+        id: createId(),
     })
 }
