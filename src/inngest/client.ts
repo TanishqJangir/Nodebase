@@ -6,4 +6,5 @@ import { Inngest } from "inngest";
 export const inngest = new Inngest({ 
     id: "nodebase",
     middleware:[realtimeMiddleware()],
+    eventKey: process.env.INNGEST_EVENT_KEY,
  });
