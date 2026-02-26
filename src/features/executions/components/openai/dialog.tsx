@@ -53,7 +53,6 @@ const formSchema = z.object({
     credentialId: z.string().min(1, "Credential is required"),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, { message: "User prompt is required" }),
-    //.refine() TODO JSON5
 })
 
 

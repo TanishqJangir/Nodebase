@@ -55,7 +55,6 @@ const formSchema = z.object({
     credentialId: z.string().min(1, "Credential is required"),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, { message: "User prompt is required" }),
-    //.refine() TODO JSON5
 })
 
 
@@ -240,7 +239,7 @@ export const AnthropicDialog = ({
                                     <FormControl>
                                         <Textarea
                                             placeholder="You are a helpful assistant."
-                                            className="min-h-[80px] font-mono text-sm"
+                                            className="text-sm min-h-[80px] font-mono"
                                             {...field}
                                         />
                                     </FormControl>

@@ -54,7 +54,6 @@ const formSchema = z.object({
     model: z.string().min(1, { message: "Model is required" }),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, { message: "User prompt is required" }),
-    //.refine() TODO JSON5
 })
 
 
