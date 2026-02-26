@@ -37,16 +37,43 @@ export function LoginForm() {
 
     });
 
+    const signInGithub = async () => {
+        await authClient.signIn.social({
+            provider: "github",
+        }, {
+            onSuccess: () => {
+                router.push("/");
+            },
+            onError: () => {
+                toast.error("Something went wrong while signing in with Github. Please try again.")
+            }
+        })
+    }
+
+
+    const signInGoogle = async () => {
+        await authClient.signIn.social({
+            provider: "google",
+        }, {
+            onSuccess: () => {
+                router.push("/");
+            },
+            onError: () => {
+                toast.error("Something went wrong while signing in with Google. Please try again.")
+            }
+        })
+    }
+
     const onSubmit = async (values: LoginFormValues) => {
         await authClient.signIn.email({
-            email : values.email,
-            password : values.password,
-            callbackURL : "/"
-        },{
-            onSuccess : () => {
+            email: values.email,
+            password: values.password,
+            callbackURL: "/"
+        }, {
+            onSuccess: () => {
                 router.push("/")
             },
-            onError : (ctx) => {
+            onError: (ctx) => {
                 toast.error(ctx.error.message)
             }
         })
@@ -74,69 +101,71 @@ export function LoginForm() {
                             <div className="grid gap-6">
                                 <div className="flex flex-col gap-4">
                                     <Button
-                                    variant="outline"
-                                    className="w-full"
-                                    type="button"
-                                    disabled={isPending}
+                                        variant="outline"
+                                        className="w-full"
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={signInGithub}
                                     >
                                         <Image width={22} height={22} alt="Github" src="/logos/github.svg" />
                                         Continue with Github
                                     </Button>
                                     <Button
-                                    variant="outline"
-                                    className="w-full"
-                                    type="button"
-                                    disabled={isPending}
+                                        variant="outline"
+                                        className="w-full"
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={signInGoogle}
                                     >
                                         <Image width={20} height={20} alt="Google" src="/logos/google.svg" />
                                         Continue with Google
                                     </Button>
                                 </div>
                                 <div className="grid gap-6">
-                                    <FormField 
-                                    control={form.control}
-                                    name="email"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Email</FormLabel>
-                                            <FormControl>
-                                                <Input 
-                                                type="email"
-                                                placeholder="m@example.com"
-                                                {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Email</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="email"
+                                                        placeholder="m@example.com"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
                                     {/* For Password */}
-                                    <FormField 
-                                    control={form.control}
-                                    name="password"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Password</FormLabel>
-                                            <FormControl>
-                                                <Input 
-                                                type="password"
-                                                placeholder="*******"
-                                                {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                    <FormField
+                                        control={form.control}
+                                        name="password"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Password</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="password"
+                                                        placeholder="*******"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
                                     <Button type="submit" className="w-full" disabled={isPending}>
                                         Login
                                     </Button>
                                 </div>
                                 <div className="text-center text-sm">
-                                        Don't have an account?{" "}
-                                        <Link href="/signup" className="underline underline-offset-4">
+                                    Don't have an account?{" "}
+                                    <Link href="/signup" className="underline underline-offset-4">
                                         Sign up
-                                        </Link>
+                                    </Link>
                                 </div>
                             </div>
 
