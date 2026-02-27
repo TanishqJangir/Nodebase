@@ -14,13 +14,10 @@ import { anthropicChannel } from "./channels/anthropic";
 import { discordChannel } from "./channels/discord";
 import { slackChannel } from "./channels/slack";
 
-
-
-
 export const executeWorkflow = inngest.createFunction(
   {
     id: "execute-workflow",
-    retries: process.env.NODE_ENV === "production" ? 3 : 0,
+    retries: process.env.NODE_ENV === "production" ? 1 : 0, // DEV: Retry 3 to 1 times in production, no retries in development
     onFailure: async ({ event, step }) => {
       return prisma.execution.update({
         where: {
