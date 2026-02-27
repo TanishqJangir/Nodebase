@@ -35,7 +35,7 @@ export const auth = betterAuth({
                 checkout({
                     products : [
                         {
-                            // productId : "09a2be65-e29b-4ecc-b358-51c2387f6597", this is fow the development (sandbox)
+                            // productId : "09a2be65-e29b-4ecc-b358-51c2387f6597", DEV: this is fow the development (sandbox)
                             productId: "e3684b44-161e-4c0f-9808-6a3786f60db0",
                             slug : "pro"
                         }
