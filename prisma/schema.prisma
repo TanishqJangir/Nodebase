@@ -124,6 +124,7 @@ enum NodeType{
   GEMINI
   DISCORD
   SLACK
+  GOOGLE_SHEETS
 }
 
 model Node {
