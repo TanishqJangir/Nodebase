@@ -90,6 +90,12 @@ const executionNodes: NodeTypeOption[] = [
         description: "Send a message to Slack",
         icon: "/logos/slack.svg",
     },
+    {
+        type: NodeType.GOOGLE_SHEETS,
+        label: "Google Sheets",
+        description: "Append rows in a Google Sheet.",
+        icon: "/logos/googlesheets.svg",
+    },
 ];
 
 interface NodeSelectorProps {
