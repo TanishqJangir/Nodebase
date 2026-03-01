@@ -11,29 +11,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
 import { toast } from "sonner";
-
-const INITIAL_CODE = `function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var sheetName = data.sheetName || 'Sheet1';
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-    
-    if (!sheet) {
-      return ContentService.createTextOutput(JSON.stringify({ error: 'Sheet not found' })).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // Values needs to be parsed just in case
-    var valuesToAppend = data.values;
-    if (typeof valuesToAppend === 'string') {
-        valuesToAppend = JSON.parse(valuesToAppend);
-    }
-
-    sheet.appendRow(valuesToAppend);
-    return ContentService.createTextOutput(JSON.stringify({ success: true, row: valuesToAppend })).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
-  }
-}`;
+import { GOOGLE_SHEETS_SCRIPT } from "./utils";
 
 const formSchema = z.object({
     variableName: z
@@ -106,7 +84,7 @@ export const GoogleSheetsDialog = ({ open, onOpenChange, onSubmit, defaultValues
                         type="button"
                         onClick={async () => {
                             try {
-                                await navigator.clipboard.writeText(INITIAL_CODE);
+                                await navigator.clipboard.writeText(GOOGLE_SHEETS_SCRIPT);
                                 toast.success("Script copied to clipboard!");
                             } catch {
                                 toast.error("Failed to copy script");
